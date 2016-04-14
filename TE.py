@@ -11,10 +11,29 @@ All new KM Macro files will be saved to the Desktop.
 
 '''
 
+# Modify this area to customize how the script will run
+
 # Change this path to where ever your TextExander Settings live
 HOME = os.path.expanduser('~')
 TEXTEXPANDER_PATH = HOME + '/Dropbox/TextExpander/Settings.textexpandersettings'
 SAVE_PATH = HOME + '/Desktop/TextExpander_to_KeyboardMaestro'
+
+# Change this if you'd like to change your snippets when importing to Keyboard Maestro
+# If your snippet is ttest, you can make it ;;ttest by changing the variable to ';;'
+OPTIONAL_NEW_PREFIX = ''
+
+# Change this if you want the snippet to inserted by typing or pasting
+# Remember it MUST be 'paste' or 'type' or the script will fail
+PASTE_OR_TYPE = 'paste' # 'type'
+
+
+
+
+############
+
+# Edit below at your own risk
+
+############
 
 snippet_types = {
     'plaintext': 0,
@@ -39,7 +58,7 @@ class KeyboardMaestroMacros(object):
             'IsActive': True,
             'Macros': [
                 {'Actions': [
-                    {'DisplayKind': 'Pasting',
+                    {'DisplayKind': KeyboardMaestroMacros._paste_or_type(),
                      'IncludeStdErr': True,
                      'IsActive': True,
                      'IsDisclosed': True,
@@ -65,7 +84,7 @@ class KeyboardMaestroMacros(object):
                     'MacroTriggerType': 'TypedString',
                     'OnlyAfterWordBreak': False,
                     'SimulateDeletes': True,
-                    'TypedString': abbreviation}]}
+                    'TypedString': KeyboardMaestroMacros._abbreviation(abbreviation)}]}
             ],
             'Name': 'Snippet - %s' % group_name,
         }
@@ -78,7 +97,7 @@ class KeyboardMaestroMacros(object):
             'IsActive': True,
             'Macros': [
                 {'Actions': [
-                    {'DisplayKind': 'Pasting',
+                    {'DisplayKind': KeyboardMaestroMacros._paste_or_type(),
                      'IncludeStdErr': True,
                      'IsActive': True,
                      'IsDisclosed': True,
@@ -104,7 +123,7 @@ class KeyboardMaestroMacros(object):
                     'MacroTriggerType': 'TypedString',
                     'OnlyAfterWordBreak': False,
                     'SimulateDeletes': True,
-                    'TypedString': abbreviation}]}
+                    'TypedString': KeyboardMaestroMacros._abbreviation(abbreviation)}]}
             ],
             'Name': 'Snippet - %s' % group_name,
         }
@@ -117,7 +136,7 @@ class KeyboardMaestroMacros(object):
             'IsActive': True,
             'Macros': [{'Actions': [
                 {
-                    'Action': 'ByPasting',
+                    'Action': KeyboardMaestroMacros._paste_or_type('plaintext'),
                     'IsActive': True,
                     'IsDisclosed': True,
                     'MacroActionType': 'InsertText',
@@ -138,7 +157,7 @@ class KeyboardMaestroMacros(object):
                     'MacroTriggerType': 'TypedString',
                     'OnlyAfterWordBreak': False,
                     'SimulateDeletes': True,
-                    'TypedString': abbreviation}],
+                    'TypedString': KeyboardMaestroMacros._abbreviation(abbreviation)}],
             }],
             'Name': 'Snippet - %s' % group_name,
         }
@@ -151,7 +170,7 @@ class KeyboardMaestroMacros(object):
             'IsActive': True,
             'Macros': [{
                 'Actions': [{
-                    'DisplayKind': 'Pasting',
+                    'DisplayKind': KeyboardMaestroMacros._paste_or_type(),
                     'IncludeStdErr': True,
                     'IsActive': True,
                     'IsDisclosed': True,
@@ -176,10 +195,25 @@ class KeyboardMaestroMacros(object):
                     'MacroTriggerType': 'TypedString',
                     'OnlyAfterWordBreak': False,
                     'SimulateDeletes': True,
-                    'TypedString': abbreviation}],
+                    'TypedString': KeyboardMaestroMacros._abbreviation(abbreviation)}],
                 }],
             'Name': 'Snippet - %s' % group_name,
         }
+
+    @staticmethod
+    def _abbreviation(name):
+        return OPTIONAL_NEW_PREFIX + name
+
+    @staticmethod
+    def _paste_or_type(snippet_type=None):
+        value = {
+            'paste': "Pasting",
+            'type': "Typing"
+        }
+        if snippet_type == 'plaintext':
+            return "By%s" % value[PASTE_OR_TYPE]
+        else:
+            return value[PASTE_OR_TYPE]
 
 
 def parse_textexpander():
