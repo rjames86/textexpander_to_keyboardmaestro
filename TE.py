@@ -141,7 +141,7 @@ class KeyboardMaestroMacros(object):
                     'IsDisclosed': True,
                     'MacroActionType': 'InsertText',
                     'Paste': True,
-                    'Text': text}, {
+                    'Text': text.replace("%|", "%|%", 1)}, {
                         'IsActive': True,
                         'IsDisclosed': True,
                         'MacroActionType': 'DeletePastClipboard',
