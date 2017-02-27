@@ -1,41 +1,45 @@
 # Convert TextExpander snippets to Keyboard Maestro macros
 
-Simple batch convert of all your Snippets to Macros.
+A simple batch convert script to convert all of your [TextExpander](https://textexpander.com/) snippets into [Keyboard Maestro](https://www.keyboardmaestro.com/main/) macros.
 
-### Usage
+## Usage
 
-Download the script and read the comments and make any changed before running the script with
+Download the script and read the comments; make any changes before running the script with
 
-`$ python TE.py`
+```
+$ python TE.py
+```
 
-### Notes
+## Notes
+
+### Fancy snippets
 
 This script will copy the snippets as they are, but doesn't convert any of the fancy features (fillPopups etc) from TextExpander automatically.
 
-So if TextExpander you have a snippet where it prompts you with a dropdown lise so:
+So, if you have a TextExpander snippet where it prompts you with a dropdown like so:
 
-`@include breakpoint(%fillpopup:name=size:$small:$medium:default=$large:$xlarge%) {%|}`
+```
+@include breakpoint(%fillpopup:name=size:$small:$medium:default=$large:$xlarge%) {%|}
+```
 
-Then that will be what Keyboard Maestro will paste (or type depending on your settings).
+Then that will be what Keyboard Maestro will exactly paste (or type depending on your settings).
 
-The fillpop won't work, so be sure to go through manually if you have fancy snippets.
+So, be sure to go through the converted macros manually if you had fancy snippets.
 
-## Insert cursor here
+### Insert cursor here token
 
-Included a find and replace for plaintext snippets allowing the "place cursor here" to work in Keyboard Maestro. The string in TextExpander to place cursor is `%|` and in Keyboard Maestro it is `%|%`
+Included is a find-and-replace for plaintext snippets allowing the “place cursor here” token to work in Keyboard Maestro. The string in TextExpander to place the cursor somewhere is `%|` and in Keyboard Maestro it is `%|%`.
 
-Although the find and replace would work with the other snippet types it woudln't work if you opt to have the snippet typed rather than pasted.
+Although the find-and-replace works well with pasted, plain text snippets, it doesn't work with the other snippet types (AppleScript, JavaScript, etc), so it's not enabled for those snippet types.
 
-If you don't then replace
+If you don't want this find-and-replace behavior, then (on line 144) then replace `'Text': text.replace("%|", "%|%", 1),` with `'Text': text,`.
 
- `'Text': text,`
+### Other tokens
 
- with
+You may want to manually do a find-and-replace for `%clipboard`, replacing it with `%PastClipboard%1%` if you use “insert clipboard” token in your TextExpander snippets.
 
- `'Text': text.replace("%|", "%|%", 1),`
+You can also drag your Settings.textexpandersettings folder into your code editor of choice and do a find-and-replace on the whole folder to replace TextExpander tokens with the Keyboard Maestro equivalent.
 
-You may want to do a find and replace for `%clipboard` replace with `%PastClipboard%1%` if you use "insert clipboard".
+### XML not well-formed error
 
-You can also drag your Settings.textexpandersettings file into Sublime and do a find and replace on the whole folder to replace TextExpander variables with the equivalent for Keyboard Maestro.
-
-
+If you get a `xml.parsers.expat.ExpatError: not well-formed (invalid token):` error when running the script, try opening up Settings.textexpandersettings and looking for the group .xml file with `<string>Suggested Snippets</string>` in it; delete that entire file. That group is the snippet suggestion group from TextExpander, and doesn't always play nice with the convert script.
