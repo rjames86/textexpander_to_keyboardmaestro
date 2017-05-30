@@ -15,7 +15,7 @@ All new KM Macro files will be saved to the Desktop.
 
 # Change this path to where ever your TextExander Settings live
 HOME = os.path.expanduser('~')
-TEXTEXPANDER_PATH = HOME + '/Dropbox/TextExpander/Settings.textexpandersettings'
+TEXTEXPANDER_PATH = HOME + '/Library/Application Support/TextExpander/Settings.textexpanderlocal'
 SAVE_PATH = HOME + '/Desktop/TextExpander_to_KeyboardMaestro'
 
 # Change this if you'd like to change your snippets when importing to Keyboard Maestro
